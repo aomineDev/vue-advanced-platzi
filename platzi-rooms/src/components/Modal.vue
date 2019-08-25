@@ -36,15 +36,16 @@ export default {
   left: 50%;
   margin-right: -50%;
   transform: translate(-50%, -50%);
-  z-index: 2000;
+  z-index: 2;
   @apply absolute bg-white p-4 shadow-lg rounded;
 }
  .modal > .modal-head {
   @apply relative;
 }
  .modal-wrapper::after {
-  content: "";
+  content: '';
   position: fixed;
+  z-index: 1;
   top: 0;
   left: 0;
   width: 100vw;

@@ -31,142 +31,18 @@
       <slot></slot>
     </main>
     <footer-partial></footer-partial>
-
-    <!-- Modals -->
-    <modal :show="modals.login" @close-modal="closeModal('login')">
-      <h2 class="text-grey-darkset font-semibold text-center mb-6">
-        Welcome to Platzi Rooms
-      </h2>
-      <form @submit.prevent="loginHandleSubmit">
-        <div class="mb-4">
-          <label class="input__label">Email</label>
-          <div class="form__field relative">
-            <input
-              type="text"
-              placeholder="bruce_wayne@imnotbatman.org"
-              class="input__field"
-              v-model="formLogin.email"
-            >
-          </div>
-        </div>
-        <div class="mb-4">
-          <label  class="input__label">Password</label>
-          <div class="form__field relative">
-            <input
-              type="password"
-              placeholder="********"
-              class="input__field"
-              v-model="formLogin.password"
-            >
-          </div>
-        </div>
-        <div class="mb-4">
-          <toggle-input v-model="formLogin.rememberMe" />
-          <span>Remember Me</span>
-        </div>
-        <div class="mb-4">
-          <button class="btn btn-primary mr-3 w-full">Login</button>
-        </div>
-      </form>
-    </modal>
-
-    <modal :show="modals.register" @close-modal="closeModal('register')">
-      <h2 class="text-grey-darkset font-semibold text-center mb-6">
-        Register to Platzi Rooms
-      </h2>
-      <form class="form" @submit.prevent="registerHandleSubmit">
-        <div class="mb-4">
-          <label class="input__label">Email</label>
-          <div class="form__field relative">
-            <input
-              type="text"
-              placeholder="bruce_wayne@imnotbatman.org"
-              class="input__field"
-              v-model="formRegister.email"
-            >
-          </div>
-        </div>
-        <div class="mb-4">
-          <label class="input__label" for="email">Name</label>
-          <div class="form__field relative">
-            <input
-              class="input__field"
-              id="name"
-              v-model="formRegister.name"
-              type="text"
-              placeholder="Bruce Wayne">
-          </div>
-        </div>
-        <div class="mb-4">
-          <label  class="input__label">Password</label>
-          <div class="form__field relative">
-            <input
-              type="password"
-              placeholder="********"
-              class="input__field"
-              v-model="formRegister.password"
-            >
-          </div>
-        </div>
-        <div class="mb-4">
-          <button class="btn btn-primary mr-3 w-full">signUp</button>
-        </div>
-      </form>
-    </modal>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
 import HeaderPartial from '@/partials/HeaderPartial.vue';
 import FooterPartial from '@/partials/FooterPartial.vue';
-import Modal from '@/components/Modal.vue';
-import ToggleInput from '@/components/ToggleInput.vue';
 
 export default {
   name: 'DefaultLayout',
   components: {
     HeaderPartial,
     FooterPartial,
-    Modal,
-    ToggleInput,
-  },
-  data() {
-    return {
-      formLogin: {
-        email: '',
-        password: '',
-        rememberMe: false,
-      },
-      formRegister: {
-        email: '',
-        name: '',
-        password: '',
-      },
-    };
-  },
-  methods: {
-    closeModal(name) {
-      this.$store.dispatch('TOGGLE_MODAL_STATE', {
-        name,
-        value: false,
-      });
-    },
-    registerHandleSubmit() {
-      this.$store.dispatch('CREATE_USER', this.formRegister)
-        .then(() => {
-          this.closeModal('register');
-        });
-    },
-    loginHandleSubmit() {
-      this.$store.dispatch('SIGN_IN', this.formLogin)
-        .then(() => {
-          this.closeModal('login');
-        });
-    },
-  },
-  computed: {
-    ...mapGetters(['modals']),
   },
 };
 </script>
