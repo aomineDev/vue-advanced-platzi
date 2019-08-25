@@ -3,46 +3,61 @@
     <div class="container">
       <div class="flex items-center justify-between flex-wrap">
         <div class="flex items-center flex-no-shrink mr-6">
-          <a
+          <router-link
             class="text-black hover:text-grey-darkest no-underline font-semibold text-lg"
-            href="#">Platzi Rooms</a>
+            :to="{ name: 'HomePage' }"
+          >
+            Platzi Rooms
+          </router-link>
         </div>
         <div class="flex items-center w-auto">
-          <div class="items__controls">
-            <div class="flex" v-if="user">
-              <button class="mr-2 flex items-center">
-                <i class="material-icons">add</i>
-              </button>
-              <button class="mr-4 flex items-center">
-                <i class="material-icons">notifications</i>
-              </button>
-              <div class="flex items-center">
-                <img
-                  class="w-8 h-8 rounded-full mr-2"
-                  :src="user.avatar"
-                  alt="Avatar of Javier Diaz"
-                >
-                <div class="text-sm">
-                  <p class="text-black leading-none">{{ user.name }}</p>
-                  <p class="text-grey-dark">Online</p>
+
+          <current-user>
+            <template slot-scope="{ user}">
+              <div class="items__controls">
+                <div class="flex" v-if="user">
+                  <router-link
+                    :to="{ name: 'createHousePage' }"
+                    tag="button"
+                    class="mr-2 flex items-center"
+                  >
+                    <i class="material-icons">add</i>
+                  </router-link>
+                  <button class="mr-4 flex items-center">
+                    <i class="material-icons">notifications</i>
+                  </button>
+                  <router-link class="flex items-center User mr-4" :to="{ name: 'ProfilePage' }" tag="div">
+                    <img
+                      class="w-8 h-8 rounded-full mr-2 User__avatar"
+                      :src="user.avatar"
+                      alt="Avatar"
+                    >
+                    <div class="text-sm">
+                      <p class="text-black leading-none">{{ user.name }}</p>
+                      <p class="text-grey-dark">Online</p>
+                    </div>
+                  </router-link>
+                  <button class="flex items-center" @click.prevent="logOut">
+                    <i class="material-icons">exit_to_app</i>
+                  </button>
+                </div>
+                <div v-else>
+                  <button
+                    class="btn__outline btn__outline--teal rounded mr-2"
+                    @click="getLogin"
+                  >
+                    Login
+                  </button>
+                  <button
+                    class="bg-yellow-dark text-yellow-darker font-semibold py-2 px-4 rounded"
+                    @click="signUp"
+                  >
+                    Register
+                  </button>
                 </div>
               </div>
-            </div>
-            <div v-else>
-              <button
-                class="btn__outline btn__outline--teal rounded mr-2"
-                @click="getLogin"
-              >
-                Login
-              </button>
-              <button
-                class="bg-yellow-dark text-yellow-darker font-semibold py-2 px-4 rounded"
-                @click="signUp"
-              >
-                Register
-              </button>
-            </div>
-          </div>
+            </template>
+          </current-user>
         </div>
       </div>
     </div>
@@ -50,14 +65,12 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import CurrentUser from '@/components/CurrentUser.vue';
 
 export default {
   name: 'HeaderPartial',
-  data() {
-    return {
-      isAuthenticated: true,
-    };
+  components: {
+    CurrentUser,
   },
   methods: {
     getLogin() {
@@ -68,15 +81,22 @@ export default {
     },
     signUp() {
       this.$store.dispatch('TOGGLE_MODAL_STATE', {
-        name: 'signup',
+        name: 'register',
         value: true,
       });
     },
-  },
-  computed: {
-    ...mapGetters({
-      user: 'authUser',
-    }),
+    logOut() {
+      this.$store.dispatch('LOG_OUT')
+    },
   },
 };
 </script>
+
+<style scoped>
+.User {
+  cursor: pointer;
+}
+.User__avatar {
+  object-fit: cover;
+}
+</style>

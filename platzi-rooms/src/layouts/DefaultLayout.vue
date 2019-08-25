@@ -33,11 +33,11 @@
     <footer-partial></footer-partial>
 
     <!-- Modals -->
-    <modal :show="modals.login" @close-modal="closeModalLogin">
+    <modal :show="modals.login" @close-modal="closeModal('login')">
       <h2 class="text-grey-darkset font-semibold text-center mb-6">
         Welcome to Platzi Rooms
       </h2>
-      <form>
+      <form @submit.prevent="loginHandleSubmit">
         <div class="mb-4">
           <label class="input__label">Email</label>
           <div class="form__field relative">
@@ -70,11 +70,11 @@
       </form>
     </modal>
 
-    <modal :show="modals.signup" @close-modal="closeModalSignUp">
+    <modal :show="modals.register" @close-modal="closeModal('register')">
       <h2 class="text-grey-darkset font-semibold text-center mb-6">
-        SignUp to Platzi Rooms
+        Register to Platzi Rooms
       </h2>
-      <form>
+      <form class="form" @submit.prevent="registerHandleSubmit">
         <div class="mb-4">
           <label class="input__label">Email</label>
           <div class="form__field relative">
@@ -82,8 +82,19 @@
               type="text"
               placeholder="bruce_wayne@imnotbatman.org"
               class="input__field"
-              v-model="formLogin.email"
+              v-model="formRegister.email"
             >
+          </div>
+        </div>
+        <div class="mb-4">
+          <label class="input__label" for="email">Name</label>
+          <div class="form__field relative">
+            <input
+              class="input__field"
+              id="name"
+              v-model="formRegister.name"
+              type="text"
+              placeholder="Bruce Wayne">
           </div>
         </div>
         <div class="mb-4">
@@ -93,7 +104,7 @@
               type="password"
               placeholder="********"
               class="input__field"
-              v-model="formLogin.password"
+              v-model="formRegister.password"
             >
           </div>
         </div>
@@ -127,20 +138,31 @@ export default {
         password: '',
         rememberMe: false,
       },
+      formRegister: {
+        email: '',
+        name: '',
+        password: '',
+      },
     };
   },
   methods: {
-    closeModalLogin() {
+    closeModal(name) {
       this.$store.dispatch('TOGGLE_MODAL_STATE', {
-        name: 'login',
+        name,
         value: false,
       });
     },
-    closeModalSignUp() {
-      this.$store.dispatch('TOGGLE_MODAL_STATE', {
-        name: 'signup',
-        value: false,
-      });
+    registerHandleSubmit() {
+      this.$store.dispatch('CREATE_USER', this.formRegister)
+        .then(() => {
+          this.closeModal('register');
+        });
+    },
+    loginHandleSubmit() {
+      this.$store.dispatch('SIGN_IN', this.formLogin)
+        .then(() => {
+          this.closeModal('login');
+        });
     },
   },
   computed: {

@@ -32,9 +32,12 @@
         </div>
       </div>
       <div class="text-center">
-        <a
+        <router-link
           class="py-3 px-12 bg-yellow-dark no-underline text-yellow-darker text-lg rounded"
-          href="#">Show all</a>
+          :to="{ name: 'SearchPage' }"
+        >
+          Show all
+        </router-link>
       </div>
     </section>
   </default-layout>
@@ -53,6 +56,9 @@ export default {
   },
   computed: {
     ...mapGetters(['rooms']),
+  },
+  beforeCreate() {
+    this.$store.dispatch('FETCH_ROOMS', 12);
   },
 };
 </script>

@@ -1,5 +1,6 @@
-import * as firebase from "firebase/app";
-import "firebase/database";
+import * as firebase from 'firebase/app';
+import 'firebase/database';
+import 'firebase/auth';
 import Vue from 'vue';
 import App from './App.vue';
 import router from './router';
@@ -17,10 +18,21 @@ const firebaseConfig = {
   appId: '1:238149938241:web:09c70f076f40282b',
 };
 
- firebase.initializeApp(firebaseConfig);
+firebase.initializeApp(firebaseConfig);
+
+firebase.auth().onAuthStateChanged((user) => {
+  if (user) {
+    store.dispatch('FETCH_AUTH_USER');
+  }
+});
 
 new Vue({
   router,
   store,
   render: h => h(App),
+  beforeCreate() {
+    if (store.state.authId) {
+      store.dispatch('FETCH_USER', { id: store.state.authId });
+    }
+  },
 }).$mount('#app');
